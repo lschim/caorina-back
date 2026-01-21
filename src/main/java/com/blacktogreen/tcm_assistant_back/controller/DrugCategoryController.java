@@ -5,22 +5,16 @@ import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/drug-categories")
+@AllArgsConstructor
 public class DrugCategoryController {
 
   private final DrugCategoryService drugCategoryService;
   private final DrugCategoryMapper drugCategoryMapper;
-
-  @Autowired
-  public DrugCategoryController(
-      DrugCategoryService drugCategoryService, DrugCategoryMapper drugCategoryMapper) {
-    this.drugCategoryService = drugCategoryService;
-    this.drugCategoryMapper = drugCategoryMapper;
-  }
 
   @GetMapping
   public List<DrugCategoryDto> getAllCategories() {
