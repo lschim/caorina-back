@@ -47,7 +47,7 @@ public class Drug {
   @ElementCollection(targetClass = Organ.class)
   @Enumerated(EnumType.STRING)
   @CollectionTable(name = "drug_movement", joinColumns = @JoinColumn(name = "drug_id"))
-  @Column(name = "movement")
+  @Column(name = "movements")
   private List<DrugMovement> movements;
 
   @ManyToOne
@@ -91,8 +91,10 @@ public class Drug {
       List<String> contraindications,
       List<String> effects,
       String dosage,
+      int numberOfStars,
       List<DrugAssociation> associationsAsOwner,
-      List<DrugAssociation> associationsAsAssociated) {
+      List<DrugAssociation> associationsAsAssociated,
+      String additionalNotes) {
     this.chineseName = chineseName;
     this.alternativeChineseNames =
         alternativeChineseNames != null ? alternativeChineseNames : new ArrayList<>();
@@ -110,5 +112,7 @@ public class Drug {
         associationsAsOwner != null ? associationsAsOwner : new ArrayList<>();
     this.associationsAsAssociated =
         associationsAsAssociated != null ? associationsAsAssociated : new ArrayList<>();
+    this.numberOfStars = numberOfStars;
+    this.additionalNotes = additionalNotes;
   }
 }
