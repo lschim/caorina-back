@@ -1,0 +1,106 @@
+package com.blacktogreen.tcm_assistant_back.service;
+
+import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
+import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
+import com.blacktogreen.tcm_assistant_back.model.Drug;
+import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
+import com.blacktogreen.tcm_assistant_back.repository.DrugRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class DrugService {
+
+  private final DrugRepository drugRepository;
+  private final DrugCategoryService drugCategoryService;
+
+  public Drug create(Drug drug) {
+    log.info("Creating drug with chineseName={}", drug.getChineseName());
+
+    if (drugRepository.existsByChineseName(drug.getChineseName())) {
+      throw new IllegalArgumentException(
+          "Drug with chineseName '%s' already exists".formatted(drug.getChineseName()));
+    }
+
+    return drugRepository.save(drug);
+  }
+
+  public Drug create(DrugCreationCmd drugCreationCmd) {
+    Drug drug = drugCreationCmd.toPartiallyFilledDrug();
+    if (drugCreationCmd.primaryCategoryId() != null) {
+      DrugCategory category =
+          drugCategoryService
+              .getCategoryById(drugCreationCmd.primaryCategoryId())
+              .orElseThrow(
+                  () ->
+                      new NotFoundException(
+                          String.format(
+                              "DrugCategory with id %d does not exist",
+                              drugCreationCmd.primaryCategoryId())));
+      drug.setPrimaryCategory(category);
+    }
+    return this.create(drug);
+  }
+
+  /**
+   * Updates the fields that can be modified by the user of the drug with {@param id}
+   *
+   * @param id
+   * @param updatedDrug
+   * @return the updated {@link Drug}
+   */
+  public Drug update(Long id, Drug updatedDrug) {
+    log.info("Updating drug id={}", id);
+
+    Drug existing =
+        drugRepository
+            .findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Drug not found : " + id));
+
+    // Fields that can be set by the user
+    existing.setChineseName(updatedDrug.getChineseName());
+    existing.setAlternativeChineseNames(updatedDrug.getAlternativeChineseNames());
+    existing.setLatinName(updatedDrug.getLatinName());
+    existing.setFrenchName(updatedDrug.getFrenchName());
+    existing.setNature(updatedDrug.getNature());
+    existing.setFlavors(updatedDrug.getFlavors());
+    existing.setTropism(updatedDrug.getTropism());
+    existing.setMovements(updatedDrug.getMovements());
+    existing.setPrimaryCategory(updatedDrug.getPrimaryCategory());
+    existing.setContraindications(updatedDrug.getContraindications());
+    existing.setEffects(updatedDrug.getEffects());
+    existing.setDosage(updatedDrug.getDosage());
+    existing.setAdditionalNotes(updatedDrug.getAdditionalNotes());
+    existing.setNumberOfStars(updatedDrug.getNumberOfStars());
+
+    return drugRepository.save(existing);
+  }
+
+  @Transactional(readOnly = true)
+  public Drug getById(Long id) {
+    return drugRepository
+        .findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Drug not found: " + id));
+  }
+
+  @Transactional(readOnly = true)
+  public List<Drug> getAll() {
+    return drugRepository.findAll();
+  }
+
+  public void delete(Long id) {
+    log.info("Deleting drug id={}", id);
+
+    if (!drugRepository.existsById(id)) {
+      throw new IllegalArgumentException("Drug not found: " + id);
+    }
+
+    drugRepository.deleteById(id);
+  }
+}
