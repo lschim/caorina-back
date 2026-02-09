@@ -4,7 +4,7 @@
 MVN=mvn
 FMT_PLUGIN_GOAL=fmt:format
 JAR_TARGET=target/*.jar
-
+DEBUG_PORT?=5005
 # ==========================
 # Default
 # ==========================
@@ -22,6 +22,7 @@ help:
 	@echo "  docker-build : Build docker image (requires Dockerfile)"
 	@echo "  install      : Install project to local Maven repository"
 	@echo "  javadoc      : Generate Javadoc"
+	@echo "  debug        : Launch the application with listening port to attach the JVM debugger"
 
 # ==========================
 # Build & Compile
@@ -69,4 +70,13 @@ run:
 .PHONY: javadoc
 javadoc:
 	$(MVN) javadoc:javadoc
+
+# ==========================
+# Debug
+# ==========================
+.PHONY: debug
+debug:
+	$(MVN) spring-boot:run \
+		-Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:${DEBUG_PORT}"
+
 
