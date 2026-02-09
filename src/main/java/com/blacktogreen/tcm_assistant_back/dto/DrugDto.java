@@ -15,6 +15,6 @@ public record DrugDto(
     List<String> contraindications,
     List<String> effects,
     String dosage,
-    int numberOfStars,
+    Integer numberOfStars,
     Long categoryId,
     String additionalNotes) {}

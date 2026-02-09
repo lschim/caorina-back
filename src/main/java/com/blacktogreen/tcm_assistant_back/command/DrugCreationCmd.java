@@ -16,7 +16,7 @@ public record DrugCreationCmd(
     List<String> contraindications,
     List<String> effects,
     String dosage,
-    int numberOfStars,
+    Integer numberOfStars,
     String additionalNotes) {
 
   /**
