@@ -1,9 +1,12 @@
 package com.blacktogreen.tcm_assistant_back.controller;
 
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @RestControllerAdvice
 public class RestGlobalExceptionHandler {
@@ -18,6 +21,20 @@ public class RestGlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+  }
+
+  @ExceptionHandler(NoHandlerFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public Map<String, Object> handleNotFound(NoHandlerFoundException ex) {
+    return Map.of(
+        "status",
+        404,
+        "error",
+        "Not Found",
+        "message",
+        "Route not found",
+        "path",
+        ex.getRequestURL());
   }
 
   @ExceptionHandler(Exception.class)
