@@ -32,19 +32,19 @@ public class Drug {
   @Enumerated(EnumType.STRING)
   private DrugNature nature;
 
-  @ElementCollection(targetClass = DrugFlavor.class)
+  @ElementCollection
   @Enumerated(EnumType.STRING)
   @CollectionTable(name = "drug_flavors", joinColumns = @JoinColumn(name = "drug_id"))
   @Column(name = "flavor")
   private List<DrugFlavor> flavors;
 
-  @ElementCollection(targetClass = Organ.class)
+  @ElementCollection
   @Enumerated(EnumType.STRING)
   @CollectionTable(name = "drug_tropism", joinColumns = @JoinColumn(name = "drug_id"))
   @Column(name = "tropism")
   private List<Organ> tropism;
 
-  @ElementCollection(targetClass = Organ.class)
+  @ElementCollection
   @Enumerated(EnumType.STRING)
   @CollectionTable(name = "drug_movement", joinColumns = @JoinColumn(name = "drug_id"))
   @Column(name = "movements")
