@@ -4,6 +4,7 @@ import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugMapper;
 import com.blacktogreen.tcm_assistant_back.model.*;
+import com.blacktogreen.tcm_assistant_back.service.DrugQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugService;
 import jakarta.persistence.*;
 import java.util.List;
@@ -16,16 +17,17 @@ import org.springframework.web.bind.annotation.*;
 public class DrugController {
 
   private final DrugService drugService;
+  private final DrugQueryService drugQueryService;
   private final DrugMapper drugMapper;
 
   @GetMapping
   public List<DrugDto> getAllDrugs() {
-    return drugService.getAll().stream().map(drugMapper::toDto).toList();
+    return drugQueryService.getAll();
   }
 
   @GetMapping("/{id}")
   public DrugDto getDrugById(@PathVariable Long id) {
-    return drugMapper.toDto(drugService.getById(id));
+    return drugQueryService.getById(id);
   }
 
   /**

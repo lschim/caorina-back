@@ -5,7 +5,6 @@ import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
 import com.blacktogreen.tcm_assistant_back.model.Drug;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -80,18 +79,6 @@ public class DrugService {
     existing.setNumberOfStars(updatedDrug.getNumberOfStars());
 
     return drugRepository.save(existing);
-  }
-
-  @Transactional(readOnly = true)
-  public Drug getById(Long id) {
-    return drugRepository
-        .findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Drug not found: " + id));
-  }
-
-  @Transactional(readOnly = true)
-  public List<Drug> getAll() {
-    return drugRepository.findAll();
   }
 
   public void delete(Long id) {
