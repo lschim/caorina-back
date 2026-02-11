@@ -38,7 +38,8 @@ public class DrugCategoryController {
   public DrugCategoryDto updateCategory(
       @PathVariable Long id, @RequestBody DrugCategoryDto category) {
     return drugCategoryMapper.toDto(
-        drugCategoryService.updateCategoryUserInfos(id, drugCategoryMapper.toEntity(category)));
+        drugCategoryService.updateCategoryUserInfos(
+            id, drugCategoryMapper.toEntity(category, null)));
   }
 
   @DeleteMapping("/{id}")

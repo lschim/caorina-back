@@ -1,18 +1,19 @@
 package com.blacktogreen.tcm_assistant_back.mapper;
 
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
+import com.blacktogreen.tcm_assistant_back.model.Drug;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
-import java.util.ArrayList;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Component
-public class DrugCategoryMapper {
+import java.util.List;
 
-  public DrugCategoryDto toDto(DrugCategory entity) {
-    return new DrugCategoryDto(entity.getId(), entity.getName(), entity.getDescription());
-  }
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+public interface DrugCategoryMapper {
 
-  public DrugCategory toEntity(DrugCategoryDto dto) {
-    return new DrugCategory(dto.name(), dto.description(), new ArrayList<>());
-  }
+  DrugCategoryDto toDto(DrugCategory entity);
+
+  @Mapping(target = "drugs", source = "drugsOfTheCategory")
+  DrugCategory toEntity(DrugCategoryDto dto, List<Drug> drugsOfTheCategory);
 }
