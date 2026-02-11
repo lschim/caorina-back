@@ -2,6 +2,8 @@ spring:
   application:
     name: tcm-assistant-back
 
+  profiles:
+    default: dev
   datasource:
     url: jdbc:postgresql://localhost:54320/tcm-assistant
     username: tcm-assistant
