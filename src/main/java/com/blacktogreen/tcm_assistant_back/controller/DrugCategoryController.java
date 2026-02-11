@@ -3,6 +3,7 @@ package com.blacktogreen.tcm_assistant_back.controller;
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
+import com.blacktogreen.tcm_assistant_back.service.DrugCategoryQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,19 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class DrugCategoryController {
 
   private final DrugCategoryService drugCategoryService;
+  private final DrugCategoryQueryService drugCategoryQueryService;
   private final DrugCategoryMapper drugCategoryMapper;
 
   @GetMapping
   public List<DrugCategoryDto> getAllCategories() {
-    return drugCategoryService.getAllCategories().stream().map(drugCategoryMapper::toDto).toList();
+    return drugCategoryQueryService.getAllCategories();
   }
 
   @GetMapping("/{id}")
   public DrugCategoryDto getCategoryById(@PathVariable Long id) {
-    return drugCategoryService
-        .getCategoryById(id)
-        .map(drugCategoryMapper::toDto)
-        .orElseThrow(() -> new RuntimeException("DrugCategory not found"));
+    return drugCategoryQueryService.getCategoryById(id);
   }
 
   @PostMapping

@@ -4,8 +4,6 @@ import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
-import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +15,6 @@ public class DrugCategoryService {
 
   private final DrugCategoryRepository drugCategoryRepository;
   private final DrugCategoryMapper drugCategoryMapper;
-
-  @Transactional(readOnly = true)
-  public List<DrugCategory> getAllCategories() {
-    return drugCategoryRepository.findAll();
-  }
-
-  @Transactional(readOnly = true)
-  public Optional<DrugCategory> getCategoryById(Long id) {
-    return drugCategoryRepository.findById(id);
-  }
 
   /**
    * Updates the values of the category that can be set by the user : name and description
