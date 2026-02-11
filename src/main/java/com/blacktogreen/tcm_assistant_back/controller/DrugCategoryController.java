@@ -1,5 +1,6 @@
 package com.blacktogreen.tcm_assistant_back.controller;
 
+import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
@@ -29,9 +30,8 @@ public class DrugCategoryController {
   }
 
   @PostMapping
-  public DrugCategoryDto createCategory(@RequestBody CreateDrugCategoryDto createDrugCategoryDto) {
-    return drugCategoryMapper.toDto(
-        drugCategoryService.createCategory(createDrugCategoryDto.toEntity()));
+  public DrugCategoryDto createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
+    return drugCategoryService.createCategory(createCmd);
   }
 
   @PutMapping("/{id}")

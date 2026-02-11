@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
+import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.model.Drug;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
@@ -29,9 +31,11 @@ class DrugServiceTest {
         DrugCategory.builder().name("Libèrent surface du vent chaleur").build();
     when(drugCategoryRepository.save(any())).thenReturn(drugCategory);
 
-    DrugCategory result = drugCategoryService.createCategory(drugCategory);
+    DrugCategoryDto result =
+        drugCategoryService.createCategory(
+            new DrugCategoryCreationCmd("Libèrent surface du vent chaleur", null));
 
-    assertThat(result.getName()).isEqualTo("Libèrent surface du vent chaleur");
+    assertThat(result.name()).isEqualTo("Libèrent surface du vent chaleur");
     verify(drugCategoryRepository).save(drugCategory);
   }
 

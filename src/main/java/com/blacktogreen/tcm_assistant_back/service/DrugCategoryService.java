@@ -1,6 +1,8 @@
 package com.blacktogreen.tcm_assistant_back.service;
 
+import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
 import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
+import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
@@ -38,11 +40,16 @@ public class DrugCategoryService {
   /**
    * Creates a {@link DrugCategory}
    *
-   * @param category
+   * @param creationCmd
    * @return the created {@link DrugCategory}
    */
-  public DrugCategory createCategory(DrugCategory category) {
-    return saveCategory(category);
+  public DrugCategoryDto createCategory(DrugCategoryCreationCmd creationCmd) {
+    DrugCategory categoryToCreate =
+        DrugCategory.builder()
+            .name(creationCmd.name())
+            .description(creationCmd.description())
+            .build();
+    return drugCategoryMapper.toDto(saveCategory(categoryToCreate));
   }
 
   private DrugCategory saveCategory(DrugCategory category) {
