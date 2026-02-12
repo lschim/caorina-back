@@ -6,7 +6,6 @@ import com.blacktogreen.tcm_assistant_back.model.Drug;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
 import com.blacktogreen.tcm_assistant_back.repository.DrugRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class DrugService {
     Drug drug = drugCreationCmd.toPartiallyFilledDrug();
     if (drugCreationCmd.primaryCategoryId() != null) {
       DrugCategory category =
-          Optional.of(drugCategoryRepository.getReferenceById(drugCreationCmd.primaryCategoryId()))
+         drugCategoryRepository.findById(drugCreationCmd.primaryCategoryId())
               .orElseThrow(
                   () ->
                       new NotFoundException(
