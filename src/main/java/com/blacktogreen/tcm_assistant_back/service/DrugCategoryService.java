@@ -1,8 +1,8 @@
 package com.blacktogreen.tcm_assistant_back.service;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
+import com.blacktogreen.tcm_assistant_back.command.DrugCategoryUpdateCmd;
 import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
-import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
@@ -21,20 +21,20 @@ public class DrugCategoryService {
   /**
    * Updates the values of the category that can be set by the user : name and description
    *
-   * @param category
+   * @param updateCmd
    * @return the updated {@link DrugCategory}
    */
-  public DrugCategory updateCategoryUserInfos(long id, DrugCategory category) {
+  public Long updateCategory(long id, DrugCategoryUpdateCmd updateCmd) {
     DrugCategory toUpdate =
         drugCategoryRepository
             .findById(id)
             .orElseThrow(
                 () ->
                     new NotFoundException(
-                        String.format("Cannot find DrugCategory with id %d", category.getId())));
-    toUpdate.setName(category.getName());
-    toUpdate.setDescription(category.getDescription());
-    return saveCategory(toUpdate);
+                        String.format("Cannot find DrugCategory with id %d", id)));
+    toUpdate.setName(updateCmd.name());
+    toUpdate.setDescription(updateCmd.description());
+    return saveCategory(toUpdate).getId();
   }
 
   /**
@@ -43,13 +43,13 @@ public class DrugCategoryService {
    * @param creationCmd
    * @return the created {@link DrugCategory}
    */
-  public DrugCategoryDto createCategory(DrugCategoryCreationCmd creationCmd) {
+  public Long createCategory(DrugCategoryCreationCmd creationCmd) {
     DrugCategory categoryToCreate =
         DrugCategory.builder()
             .name(creationCmd.name())
             .description(creationCmd.description())
             .build();
-    return drugCategoryMapper.toDto(saveCategory(categoryToCreate));
+    return saveCategory(categoryToCreate).getId();
   }
 
   private DrugCategory saveCategory(DrugCategory category) {

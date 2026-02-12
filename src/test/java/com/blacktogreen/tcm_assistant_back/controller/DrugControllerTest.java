@@ -6,12 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
-import com.blacktogreen.tcm_assistant_back.mapper.DrugMapper;
 import com.blacktogreen.tcm_assistant_back.model.DrugFlavor;
 import com.blacktogreen.tcm_assistant_back.model.DrugMovement;
 import com.blacktogreen.tcm_assistant_back.model.DrugNature;
 import com.blacktogreen.tcm_assistant_back.model.Organ;
-import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
+import com.blacktogreen.tcm_assistant_back.service.DrugQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -29,10 +28,7 @@ class DrugControllerTest {
 
   @MockitoBean private DrugService drugService;
 
-  @MockitoBean private DrugCategoryService drugCategoryService;
-  // requis car injecté dans le controller, même s'il n'est plus utilisé
-
-  @MockitoBean private DrugMapper drugMapper;
+  @MockitoBean private DrugQueryService drugQueryService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -68,7 +64,5 @@ class DrugControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cmd)))
         .andExpect(status().isNotFound());
-
-    verify(drugMapper, never()).toDto(any());
   }
 }

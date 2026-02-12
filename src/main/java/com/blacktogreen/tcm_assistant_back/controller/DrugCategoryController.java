@@ -1,9 +1,9 @@
 package com.blacktogreen.tcm_assistant_back.controller;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
+import com.blacktogreen.tcm_assistant_back.command.DrugCategoryUpdateCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
-import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
 import java.util.List;
@@ -30,26 +30,17 @@ public class DrugCategoryController {
   }
 
   @PostMapping
-  public DrugCategoryDto createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
+  public Long createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
     return drugCategoryService.createCategory(createCmd);
   }
 
   @PutMapping("/{id}")
-  public DrugCategoryDto updateCategory(
-      @PathVariable Long id, @RequestBody DrugCategoryDto category) {
-    return drugCategoryMapper.toDto(
-        drugCategoryService.updateCategoryUserInfos(
-            id, drugCategoryMapper.toEntity(category, null)));
+  public Long updateCategory(@PathVariable Long id, @RequestBody DrugCategoryUpdateCmd updateCmd) {
+    return drugCategoryService.updateCategory(id, updateCmd);
   }
 
   @DeleteMapping("/{id}")
   public void deleteCategory(@PathVariable Long id) {
     drugCategoryService.deleteCategory(id);
-  }
-
-  public record CreateDrugCategoryDto(String name, String description) {
-    DrugCategory toEntity() {
-      return new DrugCategory(name, description, null);
-    }
   }
 }

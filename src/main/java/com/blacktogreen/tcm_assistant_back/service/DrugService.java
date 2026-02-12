@@ -4,7 +4,9 @@ import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
 import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
 import com.blacktogreen.tcm_assistant_back.model.Drug;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
+import com.blacktogreen.tcm_assistant_back.repository.DrugCategoryRepository;
 import com.blacktogreen.tcm_assistant_back.repository.DrugRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class DrugService {
 
   private final DrugRepository drugRepository;
-  private final DrugCategoryService drugCategoryService;
+  private final DrugCategoryRepository drugCategoryRepository;
 
-  public Drug create(Drug drug) {
+  public Long create(Drug drug) {
     log.info("Creating drug with chineseName={}", drug.getChineseName());
 
     if (drugRepository.existsByChineseName(drug.getChineseName())) {
@@ -27,15 +29,14 @@ public class DrugService {
           "Drug with chineseName '%s' already exists".formatted(drug.getChineseName()));
     }
 
-    return drugRepository.save(drug);
+    return drugRepository.save(drug).getId();
   }
 
-  public Drug create(DrugCreationCmd drugCreationCmd) {
+  public Long create(DrugCreationCmd drugCreationCmd) {
     Drug drug = drugCreationCmd.toPartiallyFilledDrug();
     if (drugCreationCmd.primaryCategoryId() != null) {
       DrugCategory category =
-          drugCategoryService
-              .getCategoryById(drugCreationCmd.primaryCategoryId())
+          Optional.of(drugCategoryRepository.getReferenceById(drugCreationCmd.primaryCategoryId()))
               .orElseThrow(
                   () ->
                       new NotFoundException(

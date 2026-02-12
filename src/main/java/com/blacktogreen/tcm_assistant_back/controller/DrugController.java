@@ -2,7 +2,6 @@ package com.blacktogreen.tcm_assistant_back.controller;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDto;
-import com.blacktogreen.tcm_assistant_back.mapper.DrugMapper;
 import com.blacktogreen.tcm_assistant_back.model.*;
 import com.blacktogreen.tcm_assistant_back.service.DrugQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugService;
@@ -18,7 +17,6 @@ public class DrugController {
 
   private final DrugService drugService;
   private final DrugQueryService drugQueryService;
-  private final DrugMapper drugMapper;
 
   @GetMapping
   public List<DrugDto> getAllDrugs() {
@@ -37,8 +35,8 @@ public class DrugController {
    * @return
    */
   @PostMapping
-  public DrugDto createDrug(@RequestBody DrugCreationCmd drugCreationCmd) {
-    return drugMapper.toDto(drugService.create(drugCreationCmd));
+  public Long createDrug(@RequestBody DrugCreationCmd drugCreationCmd) {
+    return drugService.create(drugCreationCmd);
   }
 
   @DeleteMapping("/{id}")
