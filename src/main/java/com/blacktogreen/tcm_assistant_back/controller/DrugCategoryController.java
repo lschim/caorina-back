@@ -3,6 +3,7 @@ package com.blacktogreen.tcm_assistant_back.controller;
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryUpdateCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
+import com.blacktogreen.tcm_assistant_back.dto.IDDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
@@ -30,13 +31,13 @@ public class DrugCategoryController {
   }
 
   @PostMapping
-  public Long createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
-    return drugCategoryService.createCategory(createCmd);
+  public IDDto createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
+    return new IDDto(drugCategoryService.createCategory(createCmd));
   }
 
   @PutMapping("/{id}")
-  public Long updateCategory(@PathVariable Long id, @RequestBody DrugCategoryUpdateCmd updateCmd) {
-    return drugCategoryService.updateCategory(id, updateCmd);
+  public IDDto updateCategory(@PathVariable Long id, @RequestBody DrugCategoryUpdateCmd updateCmd) {
+    return new IDDto(drugCategoryService.updateCategory(id, updateCmd));
   }
 
   @DeleteMapping("/{id}")
