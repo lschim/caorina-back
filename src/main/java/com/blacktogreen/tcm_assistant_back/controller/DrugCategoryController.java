@@ -9,6 +9,7 @@ import com.blacktogreen.tcm_assistant_back.service.DrugCategoryQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +32,7 @@ public class DrugCategoryController {
   }
 
   @PostMapping
+  @ResponseStatus(value = HttpStatus.CREATED)
   public IDDto createCategory(@RequestBody DrugCategoryCreationCmd createCmd) {
     return new IDDto(drugCategoryService.createCategory(createCmd));
   }
