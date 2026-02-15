@@ -3,6 +3,7 @@ package com.blacktogreen.tcm_assistant_back.controller;
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryCreationCmd;
 import com.blacktogreen.tcm_assistant_back.command.DrugCategoryUpdateCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugCategoryDto;
+import com.blacktogreen.tcm_assistant_back.dto.DrugsByCategoryDto;
 import com.blacktogreen.tcm_assistant_back.dto.IDDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugCategoryMapper;
 import com.blacktogreen.tcm_assistant_back.service.DrugCategoryQueryService;
@@ -29,6 +30,11 @@ public class DrugCategoryController {
   @GetMapping("/{id}")
   public DrugCategoryDto getCategoryById(@PathVariable Long id) {
     return drugCategoryQueryService.getCategoryById(id);
+  }
+
+  @GetMapping("/{id}/drugs")
+  public DrugsByCategoryDto getDrugsByCategory(@PathVariable Long id) {
+    return drugCategoryQueryService.getDrugsByCategory(id);
   }
 
   @PostMapping
