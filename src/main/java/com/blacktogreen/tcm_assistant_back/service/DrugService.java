@@ -35,7 +35,8 @@ public class DrugService {
     Drug drug = drugCreationCmd.toPartiallyFilledDrug();
     if (drugCreationCmd.primaryCategoryId() != null) {
       DrugCategory category =
-         drugCategoryRepository.findById(drugCreationCmd.primaryCategoryId())
+          drugCategoryRepository
+              .findById(drugCreationCmd.primaryCategoryId())
               .orElseThrow(
                   () ->
                       new NotFoundException(

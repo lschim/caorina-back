@@ -11,22 +11,19 @@ import lombok.*;
 @NoArgsConstructor
 public class DrugCategory {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Setter(AccessLevel.NONE)
+  private Long id;
+  private String name;
+  private String description;
+  @OneToMany(mappedBy = "primaryCategory")
+  private List<Drug> drugs = List.of();
+
   @Builder
   public DrugCategory(String name, String description, List<Drug> drugs) {
     this.name = name;
     this.description = description;
     this.drugs = drugs != null ? drugs : new ArrayList<>();
   }
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Setter(AccessLevel.NONE)
-  private Long id;
-
-  private String name;
-
-  private String description;
-
-  @OneToMany(mappedBy = "primaryCategory")
-  private List<Drug> drugs;
 }
