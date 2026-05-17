@@ -5,6 +5,7 @@ import java.util.List;
 public record DrugDto(
     Long id,
     String name,
+    String chineseCharacters,
     String latinName,
     String frenchName,
     List<String> alternativeChineseNames,

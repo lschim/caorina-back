@@ -5,6 +5,7 @@ import java.util.List;
 
 public record DrugCreationCmd(
     String chineseName,
+    String chineseCharacters,
     List<String> alternativeChineseNames,
     String latinName,
     String frenchName,
@@ -31,6 +32,7 @@ public record DrugCreationCmd(
   public Drug toPartiallyFilledDrug() {
     return Drug.builder()
         .chineseName(chineseName)
+        .chineseCharacters(chineseCharacters)
         .alternativeChineseNames(alternativeChineseNames)
         .latinName(latinName)
         .frenchName(frenchName)
@@ -48,6 +50,7 @@ public record DrugCreationCmd(
 
   public static class Builder {
     private String chineseName;
+    private String chineseCharacters;
     private List<String> alternativeChineseNames = List.of();
     private String latinName;
     private String frenchName;
@@ -64,6 +67,11 @@ public record DrugCreationCmd(
 
     public Builder chineseName(String chineseName) {
       this.chineseName = chineseName;
+      return this;
+    }
+
+    public Builder chineseCharacters(String chineseCharacters) {
+      this.chineseCharacters = chineseCharacters;
       return this;
     }
 
@@ -135,6 +143,7 @@ public record DrugCreationCmd(
     public DrugCreationCmd build() {
       return new DrugCreationCmd(
           chineseName,
+          chineseCharacters,
           alternativeChineseNames,
           latinName,
           frenchName,

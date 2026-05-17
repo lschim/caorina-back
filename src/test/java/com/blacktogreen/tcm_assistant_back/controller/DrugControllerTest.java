@@ -40,6 +40,7 @@ class DrugControllerTest {
     DrugCreationCmd cmd =
         new DrugCreationCmd(
             "Ren Shen",
+            "人参",
             List.of("人参"),
             "Ginseng Radix",
             "Ginseng",

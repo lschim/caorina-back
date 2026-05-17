@@ -65,6 +65,7 @@ public class DrugService {
 
     // Fields that can be set by the user
     existing.setChineseName(updatedDrug.getChineseName());
+    existing.setChineseCharacters(updatedDrug.getChineseCharacters());
     existing.setAlternativeChineseNames(updatedDrug.getAlternativeChineseNames());
     existing.setLatinName(updatedDrug.getLatinName());
     existing.setFrenchName(updatedDrug.getFrenchName());

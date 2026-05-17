@@ -20,6 +20,8 @@ public class Drug {
   @Column(nullable = false, unique = true)
   private String chineseName; // name in pinyin
 
+  private String chineseCharacters;
+
   @ElementCollection
   @CollectionTable(name = "alternative_names", joinColumns = @JoinColumn(name = "drug_id"))
   @Column(name = "name")
@@ -80,6 +82,7 @@ public class Drug {
   @Builder
   public Drug(
       String chineseName,
+      String chineseCharacters,
       List<String> alternativeChineseNames,
       String latinName,
       String frenchName,
@@ -96,6 +99,7 @@ public class Drug {
       List<DrugAssociation> associationsAsAssociated,
       String additionalNotes) {
     this.chineseName = chineseName;
+    this.chineseCharacters = chineseCharacters;
     this.alternativeChineseNames =
         alternativeChineseNames != null ? alternativeChineseNames : new ArrayList<>();
     this.latinName = latinName;

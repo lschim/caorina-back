@@ -15,8 +15,10 @@ public class DrugCategory {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Setter(AccessLevel.NONE)
   private Long id;
+
   private String name;
   private String description;
+
   @OneToMany(mappedBy = "primaryCategory")
   private List<Drug> drugs = List.of();
 
