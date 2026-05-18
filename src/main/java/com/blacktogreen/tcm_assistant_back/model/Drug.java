@@ -74,7 +74,7 @@ public class Drug {
   @OneToMany(mappedBy = "associatedDrug")
   private List<DrugAssociation> associationsAsAssociated;
 
-  private Integer numberOfStars; // The importance of that drug
+  private Integer numberOfStars; // 0–10, displayed as 0–5 stars with 0.5 steps
 
   @Column(name = "additionalNotes", length = 1000)
   private String additionalNotes;

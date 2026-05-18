@@ -83,6 +83,18 @@ public class DrugService {
     return drugRepository.save(existing);
   }
 
+  public void updateStars(Long id, Integer stars) {
+    if (stars == null || stars < 0 || stars > 10) {
+      throw new IllegalArgumentException("stars must be between 0 and 10");
+    }
+    Drug drug =
+        drugRepository
+            .findById(id)
+            .orElseThrow(() -> new NotFoundException("Drug not found: " + id));
+    drug.setNumberOfStars(stars);
+    drugRepository.save(drug);
+  }
+
   public void delete(Long id) {
     log.info("Deleting drug id={}", id);
 

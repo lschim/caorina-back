@@ -1,6 +1,7 @@
 package com.blacktogreen.tcm_assistant_back.controller;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
+import com.blacktogreen.tcm_assistant_back.command.UpdateStarsCmd;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDetailDto;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDto;
 import com.blacktogreen.tcm_assistant_back.dto.IDDto;
@@ -41,6 +42,11 @@ public class DrugController {
   @ResponseStatus(value = HttpStatus.CREATED)
   public IDDto createDrug(@RequestBody DrugCreationCmd drugCreationCmd) {
     return new IDDto(drugService.create(drugCreationCmd));
+  }
+
+  @PatchMapping("/{id}/stars")
+  public void updateStars(@PathVariable Long id, @RequestBody UpdateStarsCmd cmd) {
+    drugService.updateStars(id, cmd.stars());
   }
 
   @DeleteMapping("/{id}")
