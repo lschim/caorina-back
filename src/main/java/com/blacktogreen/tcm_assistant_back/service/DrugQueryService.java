@@ -1,6 +1,7 @@
 package com.blacktogreen.tcm_assistant_back.service;
 
 import com.blacktogreen.tcm_assistant_back.controller.NotFoundException;
+import com.blacktogreen.tcm_assistant_back.dto.DrugDetailDto;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDto;
 import com.blacktogreen.tcm_assistant_back.mapper.DrugMapper;
 import com.blacktogreen.tcm_assistant_back.repository.DrugRepository;
@@ -20,10 +21,10 @@ public class DrugQueryService {
   private final DrugMapper drugMapper;
 
   @Transactional(readOnly = true)
-  public DrugDto getById(Long id) {
+  public DrugDetailDto getById(Long id) {
     return drugRepository
         .findById(id)
-        .map(drugMapper::toDto)
+        .map(drugMapper::toDetailDto)
         .orElseThrow(() -> new NotFoundException("Drug not found: " + id));
   }
 

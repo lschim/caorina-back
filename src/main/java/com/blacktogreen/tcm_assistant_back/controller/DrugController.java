@@ -1,6 +1,7 @@
 package com.blacktogreen.tcm_assistant_back.controller;
 
 import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
+import com.blacktogreen.tcm_assistant_back.dto.DrugDetailDto;
 import com.blacktogreen.tcm_assistant_back.dto.DrugDto;
 import com.blacktogreen.tcm_assistant_back.dto.IDDto;
 import com.blacktogreen.tcm_assistant_back.model.*;
@@ -26,7 +27,7 @@ public class DrugController {
   }
 
   @GetMapping("/{id}")
-  public DrugDto getDrugById(@PathVariable Long id) {
+  public DrugDetailDto getDrugById(@PathVariable Long id) {
     return drugQueryService.getById(id);
   }
 
