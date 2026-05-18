@@ -19,13 +19,16 @@ import sys
 HAS_CHINESE = re.compile(r"[一-鿿㐀-䶿]")
 
 
+_FRENCH_PARTICLES = {"et", "les", "de", "du", "la", "le", "des", "un", "une", "par", "en", "au", "aux"}
+
+
 def is_pure_pinyin(line: str) -> bool:
     """
     True if the line looks like a TCM drug name in pinyin:
     - Only ASCII letters, spaces, apostrophes, hyphens
     - First word is capitalized (real drug names: 'Ma huang', not 'dispersent le Feu')
-    - At least 2 words
-    - Between 4 and 40 characters
+    - At least 2 words, between 4 and 40 characters
+    - No French function words (to avoid matching category headers)
     """
     stripped = line.strip()
     if not stripped:
@@ -33,25 +36,53 @@ def is_pure_pinyin(line: str) -> bool:
     if not re.match(r"^[A-Z][A-Za-z '\-]+$", stripped):  # must start with uppercase
         return False
     words = stripped.split()
+    if any(w.lower() in _FRENCH_PARTICLES for w in words):
+        return False
     return len(words) >= 2 and 4 <= len(stripped) <= 40
 
 
-def extract_pinyin_from_line(line: str) -> str | None:
+def extract_pinyin_from_line(line: str) -> list[str]:
     """
-    Extract pinyin name from a title line.
-    Handles "Name" and "Name (alternate names)" formats.
-    E.g. "Chen pi (Ju pi, Hong pi)" -> "Chen pi"
-         "Bai shao (yao)"           -> "Bai shao"
-    Returns the canonical base pinyin name or None.
+    Extract pinyin name(s) from a title line.
+    Returns a list (usually one name, two for slash-separated entries, empty if no match).
+
+    Handles:
+    - "Name"                       -> ["Name"]
+    - "Name (alternate)"           -> ["Name"]
+    - "(Prefix) name"              -> ["Name"]   e.g. "(Ku) xing ren", "(Han) Fang ji"
+    - "Annexe : Name"              -> ["Name"]
+    - "Annexe : Name 漢字"         -> ["Name"]   inline Chinese stripped
+    - "Name1 / Name2"              -> ["Name1", "Name2"]
+    - "Name1/ Name2"               -> ["Name1", "Name2"]
     """
     stripped = line.strip()
+
+    # Strip "Annexe : " prefix (with optional inline Chinese at end)
+    if re.match(r"^Annexe\s*:", stripped, re.IGNORECASE):
+        stripped = re.sub(r"^Annexe\s*:\s*", "", stripped, flags=re.IGNORECASE).strip()
+        # Strip trailing Chinese characters and spaces
+        stripped = re.sub(r"[\s一-鿿㐀-䶿]+$", "", stripped).strip()
+
+    # Strip leading "(Word) " prefix — e.g. "(Ku) xing ren" -> "Xing ren"
+    leading = re.match(r"^\([^)]+\)\s+(.*)", stripped)
+    if leading:
+        rest = leading.group(1).strip()
+        stripped = rest[0].upper() + rest[1:] if rest else rest
+
+    # Slash-separated pair: "Da zao / Hong zao", "Wu zei gu/ Hai piao xiao"
+    if re.search(r"\s*/\s*", stripped):
+        parts = [p.strip() for p in re.split(r"\s*/\s*", stripped)]
+        return [p for p in parts if is_pure_pinyin(p)]
+
     if is_pure_pinyin(stripped):
-        return stripped
+        return [stripped]
+
     # Strip trailing parenthetical alternate name and retry
     base = re.sub(r"\s*\([^)]*\)\s*$", "", stripped).strip()
     if is_pure_pinyin(base):
-        return base
-    return None
+        return [base]
+
+    return []
 
 
 def is_category_line(line: str) -> bool:
@@ -72,29 +103,39 @@ def find_category_at(lines: list[str], i: int) -> str:
 def find_drug_title_positions(lines: list[str]) -> list[tuple[int, str]]:
     """
     Returns (line_index, pinyin_name) for each drug title slide.
-    Pattern: pure-pinyin line (optionally followed by alternate names in parens)
-             → Chinese characters within next 2 lines → Latin name nearby.
+    A slash-separated title (e.g. "Da zao / Hong zao") yields one entry per name,
+    all pointing to the same start line.
+
+    Pattern: pinyin line → Chinese characters on same line or within next 2 lines
+             → Latin name in parentheses nearby (not required for Annexe entries).
     """
     positions = []
     for i, line in enumerate(lines):
-        pinyin = extract_pinyin_from_line(line)
-        if not pinyin:
+        names = extract_pinyin_from_line(line)
+        if not names:
             continue
-        # Chinese characters must be on one of the next 2 lines (tight window)
-        found_chinese = False
-        for j in range(i + 1, min(i + 3, len(lines))):
-            if HAS_CHINESE.search(lines[j]):
-                found_chinese = True
-                break
-            if lines[j].strip():
-                break  # non-empty non-Chinese line → not a title slide
+        is_annexe = re.match(r"^\s*Annexe\s*:", line, re.IGNORECASE) is not None
+        # Chinese characters: accept on the same line (inline) or next 2 lines
+        found_chinese = bool(HAS_CHINESE.search(line))
+        if not found_chinese:
+            for j in range(i + 1, min(i + 3, len(lines))):
+                if HAS_CHINESE.search(lines[j]):
+                    found_chinese = True
+                    break
+                if lines[j].strip():
+                    break  # non-empty non-Chinese line → not a title slide
         if not found_chinese:
             continue
-        # Latin name in parentheses must appear nearby
-        for k in range(i + 1, min(i + 6, len(lines))):
-            if lines[k].strip().startswith("("):
-                positions.append((i, pinyin))
-                break
+        # Latin name in parentheses must appear nearby — relaxed for Annexe entries
+        if is_annexe:
+            for name in names:
+                positions.append((i, name))
+        else:
+            for k in range(i + 1, min(i + 8, len(lines))):
+                if lines[k].strip().startswith("("):
+                    for name in names:
+                        positions.append((i, name))
+                    break
     return positions
 
 
@@ -118,10 +159,13 @@ def main(input_path: str, output_path: str) -> None:
 
     chunks = []
     for idx, (start_line, pinyin) in enumerate(title_positions):
-        end_line = (
-            title_positions[idx + 1][0] if idx + 1 < len(title_positions) else len(lines)
+        # Find the next entry that starts on a different line (slash entries share start_line)
+        next_different = next(
+            (title_positions[j][0] for j in range(idx + 1, len(title_positions))
+             if title_positions[j][0] != start_line),
+            len(lines),
         )
-        raw = "\n".join(lines[start_line:end_line]).strip()
+        raw = "\n".join(lines[start_line:next_different]).strip()
         chunks.append({
             "category": category_by_drug_line.get(start_line, "Unknown"),
             "pinyin": pinyin,
@@ -169,10 +213,12 @@ if __name__ == "__main__":
 
         file_chunks = []
         for idx, (start_line, pinyin) in enumerate(title_positions):
-            end_line = (
-                title_positions[idx + 1][0] if idx + 1 < len(title_positions) else len(lines)
+            next_different = next(
+                (title_positions[j][0] for j in range(idx + 1, len(title_positions))
+                 if title_positions[j][0] != start_line),
+                len(lines),
             )
-            raw = "\n".join(lines[start_line:end_line]).strip()
+            raw = "\n".join(lines[start_line:next_different]).strip()
             file_chunks.append({
                 "source": input_file,
                 "category": category_by_drug_line.get(start_line, "Unknown"),
