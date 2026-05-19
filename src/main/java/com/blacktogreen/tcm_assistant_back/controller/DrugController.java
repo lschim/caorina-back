@@ -23,7 +23,10 @@ public class DrugController {
   private final DrugQueryService drugQueryService;
 
   @GetMapping
-  public List<DrugDto> getAllDrugs() {
+  public List<DrugDto> getAllDrugs(@RequestParam(required = false) String search) {
+    if (search != null && !search.isBlank()) {
+      return drugQueryService.search(search);
+    }
     return drugQueryService.getAll();
   }
 

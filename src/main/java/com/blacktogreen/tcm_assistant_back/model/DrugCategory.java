@@ -20,6 +20,7 @@ public class DrugCategory {
   private String description;
 
   @OneToMany(mappedBy = "primaryCategory")
+  @OrderBy("numberOfStars DESC NULLS LAST")
   private List<Drug> drugs = List.of();
 
   @Builder

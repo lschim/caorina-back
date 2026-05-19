@@ -32,4 +32,9 @@ public class DrugQueryService {
   public List<DrugDto> getAll() {
     return drugRepository.findAll().stream().map(drugMapper::toDto).toList();
   }
+
+  @Transactional(readOnly = true)
+  public List<DrugDto> search(String query) {
+    return drugRepository.search(query).stream().map(drugMapper::toDto).toList();
+  }
 }
