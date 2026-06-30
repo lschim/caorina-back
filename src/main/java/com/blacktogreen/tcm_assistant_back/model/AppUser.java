@@ -34,6 +34,13 @@ public class AppUser implements UserDetails {
   @Column(nullable = false)
   private LocalDateTime createdAt;
 
+  public AppUser(String email, String passwordHash, AppUserRole role) {
+    this.email = email;
+    this.passwordHash = passwordHash;
+    this.role = role;
+    this.createdAt = java.time.LocalDateTime.now();
+  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

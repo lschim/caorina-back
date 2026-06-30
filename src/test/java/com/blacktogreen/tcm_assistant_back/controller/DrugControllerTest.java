@@ -12,16 +12,19 @@ import com.blacktogreen.tcm_assistant_back.model.DrugNature;
 import com.blacktogreen.tcm_assistant_back.model.Organ;
 import com.blacktogreen.tcm_assistant_back.service.DrugQueryService;
 import com.blacktogreen.tcm_assistant_back.service.DrugService;
+import com.blacktogreen.tcm_assistant_back.service.JwtService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 @WebMvcTest(DrugController.class)
+@WithMockUser
 class DrugControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -29,6 +32,8 @@ class DrugControllerTest {
   @MockitoBean private DrugService drugService;
 
   @MockitoBean private DrugQueryService drugQueryService;
+
+  @MockitoBean private JwtService jwtService;
 
   @Autowired private ObjectMapper objectMapper;
 

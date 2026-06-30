@@ -1,5 +1,6 @@
 package com.blacktogreen.tcm_assistant_back.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +12,9 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +26,16 @@ public class SecurityConfig {
     return http.csrf(AbstractHttpConfigurer::disable)
         .cors(cors -> {})
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .securityContext(
+            sc ->
+                sc.securityContextRepository(
+                    new DelegatingSecurityContextRepository(
+                        new RequestAttributeSecurityContextRepository(),
+                        new HttpSessionSecurityContextRepository())))
+        .exceptionHandling(
+            e ->
+                e.authenticationEntryPoint(
+                    (req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(HttpMethod.POST, "/auth/login")

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.blacktogreen.tcm_assistant_back.DrugCategoryMother;
 import com.blacktogreen.tcm_assistant_back.DrugCreationCmdMother;
+import com.blacktogreen.tcm_assistant_back.SecurityMockMvcConfig;
 import com.blacktogreen.tcm_assistant_back.command.DrugCreationCmd;
 import com.blacktogreen.tcm_assistant_back.model.DrugCategory;
 import jakarta.persistence.EntityManager;
@@ -13,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -25,6 +28,8 @@ import tools.jackson.databind.ObjectMapper;
 @Testcontainers
 @Transactional
 @AutoConfigureMockMvc
+@WithMockUser
+@Import(SecurityMockMvcConfig.class)
 class DrugControllerIntegrationTest {
 
   @ServiceConnection @Container
@@ -49,7 +54,7 @@ class DrugControllerIntegrationTest {
                 "flavors": ["SWEET", "BITTER"],
                 "tropism": ["LIVER"],
                 "movements": ["ASCENDING"],
-                "primaryCategoryId": 1,
+                "primaryCategoryId": 99999,
                 "numberOfStars": 5
             }
             """;
