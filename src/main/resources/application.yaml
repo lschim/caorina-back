@@ -1,13 +1,13 @@
 spring:
   application:
-    name: tcm-assistant-back
+    name: caorina-back
 
   profiles:
     default: dev
   datasource:
-    url: jdbc:postgresql://localhost:54320/tcm-assistant
-    username: tcm-assistant
-    password: tcm-assistant
+    url: jdbc:postgresql://localhost:54320/caorina
+    username: caorina
+    password: caorina
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -35,7 +35,7 @@ spring:
 logging:
   level:
     root: INFO
-    com.blacktogreen.tcm_assistant_back: DEBUG
+    com.blacktogreen.caorina: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.tool.schema: DEBUG
 

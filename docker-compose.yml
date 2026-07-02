@@ -2,13 +2,13 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_DB: tcm-assistant
-      POSTGRES_USER: tcm-assistant
-      POSTGRES_PASSWORD: tcm-assistant
+      POSTGRES_DB: caorina
+      POSTGRES_USER: caorina
+      POSTGRES_PASSWORD: caorina
     ports:
       - "54320:5432"
     volumes:
-      - tcm-assistant-data:/var/lib/postgresql/data
+      - caorina-data:/var/lib/postgresql/data
 
 volumes:
-  tcm-assistant-data:
+  caorina-data:

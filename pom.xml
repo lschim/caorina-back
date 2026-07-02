@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.blacktogreen</groupId>
-    <artifactId>tcm-assistant-back</artifactId>
+    <artifactId>caorina-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>tcm-assistant-back</name>
-    <description>tcm-assistant backend</description>
+    <name>caorina-back</name>
+    <description>caorina backend</description>
     <url/>
     <licenses>
         <license/>

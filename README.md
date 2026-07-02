@@ -1,6 +1,6 @@
-# tcm-assistant-back
+# caorina-back
 
-**Backend API for Chinese Medicine Practitioners**  
+**Backend API of Caorina, a web-site for Chinese Medicine Practitioners**  
 A Spring Boot application to assist practitioners in managing herbs, drugs, categories, and other aspects of Traditional
 Chinese Medicine (TCM).
 
