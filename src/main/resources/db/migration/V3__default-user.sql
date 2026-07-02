@@ -1,0 +1,2 @@
+INSERT INTO app_user (email, password_hash, role, created_at)
+VALUES ('admin@caorina.fr', '$argon2id$v=19$m=16384,t=2,p=1$UGTKZjRmurUrBgg9a50NGw$KYa9Q9bbnQCzpvUZY32CPSO4gVcuYLGxSZQb05WPxHE', 'ADMIN', now());
