@@ -63,8 +63,7 @@ public class Drug {
 
   @ElementCollection
   @CollectionTable(name = "drug_effects", joinColumns = @JoinColumn(name = "drug_id"))
-  @Column(name = "effect", length = 1000)
-  private List<String> effects;
+  private List<DrugEffect> effects;
 
   private String dosage;
 
@@ -92,7 +91,7 @@ public class Drug {
       List<DrugMovement> movements,
       DrugCategory primaryCategory,
       List<String> contraindications,
-      List<String> effects,
+      List<DrugEffect> effects,
       String dosage,
       Integer numberOfStars,
       List<DrugAssociation> associationsAsOwner,

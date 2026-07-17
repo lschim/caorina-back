@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.blacktogreen.caorina.model.Drug;
 import com.blacktogreen.caorina.model.DrugAssociation;
 import com.blacktogreen.caorina.model.DrugCategory;
+import com.blacktogreen.caorina.model.DrugEffect;
 import com.blacktogreen.caorina.model.DrugFlavor;
 import com.blacktogreen.caorina.model.DrugMovement;
 import com.blacktogreen.caorina.model.DrugNature;
@@ -60,9 +61,15 @@ class DrugPersistenceIntegrationTest {
                     "Incompatible avec Li Lu (Veratrum)"))
             .effects(
                 List.of(
-                    "Tonifie fortement le Yuan Qi",
-                    "Renforce la Rate et les Poumons",
-                    "Génère les Liquides et calme la soif"))
+                    DrugEffect.builder().text("Tonifie fortement le Yuan Qi").yaoYao(false).build(),
+                    DrugEffect.builder()
+                        .text("Renforce la Rate et les Poumons")
+                        .yaoYao(true)
+                        .build(),
+                    DrugEffect.builder()
+                        .text("Génère les Liquides et calme la soif")
+                        .yaoYao(false)
+                        .build()))
             .dosage("3-9g, jusqu'à 30g en cas d'urgence")
             .numberOfStars(5)
             .additionalNotes("Plante majeure — décoction séparée recommandée")
@@ -92,9 +99,12 @@ class DrugPersistenceIntegrationTest {
             "Ne pas utiliser en cas de chaleur plénitude", "Incompatible avec Li Lu (Veratrum)");
     assertThat(loaded.getEffects())
         .containsExactlyInAnyOrder(
-            "Tonifie fortement le Yuan Qi",
-            "Renforce la Rate et les Poumons",
-            "Génère les Liquides et calme la soif");
+            DrugEffect.builder().text("Tonifie fortement le Yuan Qi").yaoYao(false).build(),
+            DrugEffect.builder().text("Renforce la Rate et les Poumons").yaoYao(true).build(),
+            DrugEffect.builder()
+                .text("Génère les Liquides et calme la soif")
+                .yaoYao(false)
+                .build());
     assertThat(loaded.getDosage()).isEqualTo("3-9g, jusqu'à 30g en cas d'urgence");
     assertThat(loaded.getNumberOfStars()).isEqualTo(5);
     assertThat(loaded.getAdditionalNotes())
@@ -136,8 +146,14 @@ class DrugPersistenceIntegrationTest {
             .associatedDrug(drugB)
             .effects(
                 List.of(
-                    "Synergie de tonification du Qi",
-                    "Renforce l'action sur la Rate et les Poumons"))
+                    DrugEffect.builder()
+                        .text("Synergie de tonification du Qi")
+                        .yaoYao(true)
+                        .build(),
+                    DrugEffect.builder()
+                        .text("Renforce l'action sur la Rate et les Poumons")
+                        .yaoYao(false)
+                        .build()))
             .build();
     entityManager.persist(association);
 
@@ -151,6 +167,10 @@ class DrugPersistenceIntegrationTest {
     assertThat(loadedAssoc.getAssociatedDrug().getChineseName()).isEqualTo("Huang Qi");
     assertThat(loadedAssoc.getEffects())
         .containsExactlyInAnyOrder(
-            "Synergie de tonification du Qi", "Renforce l'action sur la Rate et les Poumons");
+            DrugEffect.builder().text("Synergie de tonification du Qi").yaoYao(true).build(),
+            DrugEffect.builder()
+                .text("Renforce l'action sur la Rate et les Poumons")
+                .yaoYao(false)
+                .build());
   }
 }

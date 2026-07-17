@@ -31,11 +31,10 @@ public class DrugAssociation {
   @CollectionTable(
       name = "drug_association_effects",
       joinColumns = @JoinColumn(name = "association_id"))
-  @Column(name = "effect")
-  private List<String> effects;
+  private List<DrugEffect> effects;
 
   @Builder
-  public DrugAssociation(Drug drug, Drug associatedDrug, List<String> effects) {
+  public DrugAssociation(Drug drug, Drug associatedDrug, List<DrugEffect> effects) {
     this.drug = drug;
     this.associatedDrug = associatedDrug;
     this.effects = effects != null ? effects : new ArrayList<>();
