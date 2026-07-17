@@ -15,8 +15,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Charge en plus classpath:db/seed (contrairement au profil test standard, cf.
- * application-test.properties) pour vérifier les comptes réels après application de la migration V4
- * sur les données de production.
+ * application-test.properties) pour vérifier les comptes réels après application des migrations V4
+ * et V5 sur les données de production.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -34,7 +34,7 @@ class YaoYaoSeedMigrationIntegrationTest {
     Integer drugEffectsCount =
         jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM drug_effects WHERE is_yao_yao = true", Integer.class);
-    assertThat(drugEffectsCount).isEqualTo(22);
+    assertThat(drugEffectsCount).isEqualTo(129);
 
     Integer associationEffectsCount =
         jdbcTemplate.queryForObject(
