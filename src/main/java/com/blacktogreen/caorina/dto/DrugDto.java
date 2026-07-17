@@ -14,7 +14,7 @@ public record DrugDto(
     List<DrugMovementDto> movements,
     List<OrganDto> tropism,
     List<String> contraindications,
-    List<String> effects,
+    List<DrugEffectDto> effects,
     String dosage,
     Integer numberOfStars,
     Long categoryId,
