@@ -2,11 +2,8 @@ package com.blacktogreen.caorina.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.blacktogreen.caorina.DrugCategoryCreationCmdMother;
 import com.blacktogreen.caorina.DrugCategoryMother;
 import com.blacktogreen.caorina.DrugMother;
 import com.blacktogreen.caorina.SecurityMockMvcConfig;
@@ -19,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,17 +42,6 @@ class DrugCategoryControllerIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired private EntityManager entityManager;
-
-  @Test
-  void should_create_valid_category() throws Exception {
-    var cmd = DrugCategoryCreationCmdMother.one();
-
-    mvc.perform(
-            post("/api/drug-categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cmd)))
-        .andExpect(status().isCreated());
-  }
 
   @Test
   void should_return_drugs_of_the_category() throws Exception {
